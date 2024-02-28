@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thermodynamics Bingo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #ADD8E6; /* Custom background color */
+    }
+    /* Align instructions to the left edge */
+    #instructions {
+      text-align: left;
+      margin-left: 5%; /* Adjust margin as needed */
+      max-width: 90%; /* Limit the width to 70% of the viewport */
+      margin: 0 auto; /* Center the instructions */
+      background-color: #fff; /* Instructions background color */
+      padding: 20px; /* Add padding to the instructions */
+      border-radius: 10px; /* Rounded corners */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle effect */
+    }
+    /* Adjust the width and center the bingo card */
+    table {
+      margin: 20px auto; /* Center the table with some top margin */
+      width: 70%; /* Adjust the width as needed */
+      background-color: #fff; /* Bingo card background color */
+      border-radius: 10px; /* Rounded corners */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle effect */
+    }
+    /* Ensure each cell in the table is a square */
+    td {
+      width: 20%; /* Set the width of each cell to 20% */
+      padding: 10px; /* Add padding for spacing */
+      height: 0; /* Set initial height to 0 */
+      padding-bottom: 20%; /* Set padding bottom to create a square */
+      position: relative;
+    }
+    /* Style for the text within each cell */
+    .bingo-square {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid black;
+      transition: background-color 0.3s ease; /* Smooth transition for background color change */
+    }
+    /* Darken the bingo square on click */
+    .bingo-square.clicked {
+      background-color: rgba(0, 0, 0, 0.5); /* Darken the background color */
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to Thermodynamics Bingo!</h1>
+
+  <div id="instructions">
+    <h2>Instructions:</h2>
+    <ul>
+      <li>Get ready for some thermodynamics fun with Dr. Bishop!</li>
+      <li>Each square on your bingo card represents a riveting event that might happen during class... or maybe not!</li>
+      <li>As Dr. Bishop weaves his magic with equations and EXPO markers, click on squares that capture the beauty of the academic artistry unfolding before your eyes.</li>
+      <li>The first to complete 5 squares in a row (horizontally, vertically, or diagonally) gets to shout "Bingo!" and revel in the glory of their intellectual triumph.</li>
+      <li>But wait, there's more! If you manage to blackout the entire card, you'll ascend to the coveted title of Thermodynamics Bingo Champion and earn bragging rights for life. Plus, Logan might even buy you ice cream from Sam's. No promises, though.</li>
+      <li>Remember, the goal is to have a blast while learning, because who said thermodynamics can't be fun? Embrace the chaos, and may the entropy be ever in your favor!</li>
+    </ul>
+  </div>
+
+  <h2>Bingo Card:</h2>
+  <table border="1" id="bingo-card">
+    <!-- The bingo card will be generated dynamically using JavaScript -->
+  </table>
+
+  <script>
+    // List of bingo events
+    var events = [
+      "Dr. B uses 'algebra' to jump to end of problem", "Kyle gets upset over Dr. B math error", 
+      "Dr. B points out fast/slow clock", "Dr. B tells random life story", 
+      "Dr. B keeps talking after class ends", "Dr. Bishop tells us he loves us", 
+      "Dr. B makes a joke about being allergic to math/science following a sneeze", "Dr. B gives HW hint", 
+      "Dr. B says shouting means we love current topic", "Dr. B asks a question no one answers", 
+      "Dr. B talks in German", "Collin", "Someone brings up Wes's French heritage", 
+      "Dr. B talks about trains", "Dr. B comments on the HVAC system", 
+      "Dr. B talks about the thermodynamics of the weather", "Everyone shows up to class", 
+      "Dr. Bishop writes illegibly", "Dr. B talks about needing to change his notes", 
+      "Dr. B says, 'That's probably a good spot for a break'", "Dr. B references a doctrine of creation", 
+      "We work through more than 5 problems in class", "Someone mentions doing class in the physics lounge/outside", 
+      "Dr. B tells us to break into teams", "Dr. B needs a new marker", "Dr. B says, 'ideal gas'"
+    ];
+
+    // Function to shuffle the events array
+    function shuffleEvents(array) {
+      for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+      }
+      return array;
+    }
+
+    // Function to generate a random bingo card
+    function generateBingoCard() {
+      var card = [];
+      var shuffledEvents = shuffleEvents(events);
+
+      // Place the free space square in the center
+      var freeSpace = "FREE SPACE";
+      var index = 0;
+      for (var i = 0; i < 5; i++) {
+        var row = [];
+        for (var j = 0; j < 5; j++) {
+          if (i == 2 && j == 2) {
+            row.push(freeSpace);
+          } else {
+            row.push(shuffledEvents[index++]);
+          }
+        }
+        card.push(row);
+      }
+      return card;
+    }
+
+    // Function to toggle the "clicked" class on bingo square
+    function toggleClicked(square) {
+      square.classList.toggle('clicked');
+    }
+
+    // Generate the bingo card when the page loads
+    window.onload = function() {
+      var card = generateBingoCard();
+      var bingoCardTable = document.getElementById("bingo-card");
+
+      for (var i = 0; i < 5; i++) {
+        var row = document.createElement("tr");
+        for (var j = 0; j < 5; j++) {
+          var cell = document.createElement("td");
+          var bingoSquare = document.createElement("div");
+          bingoSquare.classList.add("bingo-square");
+          bingoSquare.onclick = function() { toggleClicked(this); };
+          bingoSquare.innerText = card[i][j];
+          cell.appendChild(bingoSquare);
+          row.appendChild(cell);
+        }
+        bingoCardTable.appendChild(row);
+      }
+    };
+  </script>
+</body>
+</html>
